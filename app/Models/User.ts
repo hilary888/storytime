@@ -18,6 +18,9 @@ export default class User extends BaseModel {
   public avatar: AttachmentContract
 
   @column()
+  public username: string
+
+  @column()
   public email: string
 
   @column({ serializeAs: null })

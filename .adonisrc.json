@@ -16,7 +16,8 @@
   },
   "preloads": [
     "./start/routes",
-    "./start/kernel"
+    "./start/kernel",
+    "./start/events"
   ],
   "providers": [
     "./providers/AppProvider",
@@ -26,7 +27,8 @@
     "@adonisjs/lucid-slugify",
     "@adonisjs/attachment-lite",
     "@adonisjs/redis",
-    "@adonisjs/mail"
+    "@adonisjs/mail",
+    "@adonisjs/view"
   ],
   "aceProviders": [
     "@adonisjs/repl"
@@ -44,5 +46,11 @@
   },
   "testProviders": [
     "@japa/preset-adonis/TestsProvider"
+  ],
+  "metaFiles": [
+    {
+      "pattern": "resources/views/**/*.edge",
+      "reloadServer": false
+    }
   ]
 }

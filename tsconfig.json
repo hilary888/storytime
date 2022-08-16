@@ -34,7 +34,8 @@
       "@adonisjs/lucid-slugify",
       "@adonisjs/attachment-lite",
       "@adonisjs/redis",
-      "@adonisjs/mail"
+      "@adonisjs/mail",
+      "@adonisjs/view"
     ]
   }
 }
