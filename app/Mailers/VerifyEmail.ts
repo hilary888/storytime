@@ -2,6 +2,7 @@ import { BaseMailer, MessageContract } from '@ioc:Adonis/Addons/Mail'
 import Env from "@ioc:Adonis/Core/Env"
 import EmailVerificationToken from 'App/Models/EmailVerificationToken'
 import User from 'App/Models/User'
+import Route from '@ioc:Adonis/Core/Route'
 
 export default class VerifyEmail extends BaseMailer {
   /**
@@ -25,7 +26,10 @@ export default class VerifyEmail extends BaseMailer {
   }
 
   public prepare(message: MessageContract) {
-    const url = `${Env.get("FE_URL")}/verify/${this.verificationToken.token}`
+    const signedRoute = Route.makeSignedUrl("verifyEmail", { token: this.verificationToken.token });
+
+    const url = `${Env.get("FE_URL")}${signedRoute}`
+    console.log("url: ", url);
     const sender = "noreply@storytime.com"
 
     message

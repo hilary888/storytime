@@ -8,6 +8,17 @@ export default class AuthController {
         const user = await AuthService.signUpUser(payload)
         await AuthService.sendVerificationEmail(user)
 
-        return response.ok(user.serialize())
+        return response.created(user.serialize())
+    }
+
+    public async verifyEmail({ request, response }: HttpContextContract) {
+        // TODO: Implement
+        if (!request.hasValidSignature()) {
+            return response.badRequest({
+                errors: [
+                    { message: "URL signature is missing or URL was tampered with" }
+                ]
+            })
+        }
     }
 }
