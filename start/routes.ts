@@ -24,4 +24,6 @@ Route.group(() => {
   Route.get("/health_check", "HealthCheckController.healthCheck")
   Route.post("/signup", "AuthController.signUp")
   Route.get("/verify/:token", "AuthController.verifyEmail").as("verifyEmail")
+  Route.get("/forgot_password/:email", "AuthController.getPasswordResetToken")
+  Route.post("/reset_password/:token", "AuthController.resetPassword").as("resetPassword")
 }).prefix("/api/v1")

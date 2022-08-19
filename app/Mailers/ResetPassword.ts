@@ -1,10 +1,10 @@
 import { BaseMailer, MessageContract } from '@ioc:Adonis/Addons/Mail'
-import Env from "@ioc:Adonis/Core/Env"
-import EmailVerificationToken from 'App/Models/EmailVerificationToken'
+import PasswordResetToken from 'App/Models/PasswordResetToken'
 import User from 'App/Models/User'
-import Route from '@ioc:Adonis/Core/Route'
+import Env from "@ioc:Adonis/Core/Env"
+import Route from "@ioc:Adonis/Core/Route"
 
-export default class VerifyEmail extends BaseMailer {
+export default class ResetPassword extends BaseMailer {
   /**
    * WANT TO USE A DIFFERENT MAILER?
    *
@@ -16,28 +16,26 @@ export default class VerifyEmail extends BaseMailer {
 
   /**
    * The prepare method is invoked automatically when you run
-   * "VerifyEmail.send".
+   * "ResetPassword.send".
    *
    * Use this method to prepare the email message. The method can
    * also be async.
    */
-  constructor(private user: User, private verificationToken: EmailVerificationToken) {
+  constructor(private user: User, private resetToken: PasswordResetToken) {
     super()
   }
 
   public prepare(message: MessageContract) {
-    const signedRoute = Route.makeSignedUrl("verifyEmail", { token: this.verificationToken.token });
-
+    const signedRoute = Route.makeSignedUrl("resetPassword", { token: this.resetToken.token })
     const url = `${Env.get("FE_URL")}${signedRoute}`
-    const sender = "noreply@storytime.com"
 
     message
-      .subject("Welcome Onboard!")
-      .from(sender)
+      .subject('Storytime - Reset Password')
+      .from('noreply@storytime.com')
       .to(this.user.email)
-      .htmlView("emails/welcome", {
-        username: this.user.username,
-        url
+      .htmlView("emails/reset_password", {
+        url,
+        username: this.user.username
       })
   }
 }
