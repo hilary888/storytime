@@ -1,0 +1,36 @@
+components:
+  schemas:
+    ValidationError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValidationErrorDetail"
+
+    ValidationErrorDetail:
+      type: object
+      properties:
+        rule:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    UserDetails:
+      type: object
+      properties:
+        id:
+          type: number
+        username:
+          type: string
+        email:
+          type: string
+        last_login_at:
+          nullable: true
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string

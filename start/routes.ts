@@ -20,6 +20,18 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+Route.group(() => {
+  Route.get("/health_check", "HealthCheckController.healthCheck")
+  Route.post("/signup", "AuthController.signUp")
+  Route.get("/verify/:token", "AuthController.verifyEmail").as("verifyEmail")
+  Route.get("/forgot_password/:email", "AuthController.getPasswordResetToken")
+  Route.post("/reset_password/:token", "AuthController.resetPassword").as("resetPassword")
+  Route.post("/login", "AuthController.login")
+  Route.get("/resend_verification/:email", "AuthController.resendEmailVerification")
+
+  // Auth routes
+  Route.group(() => {
+    Route.get("/logout", "AuthController.logout")
+  }).middleware("auth")
+
+}).prefix("/api/v1")

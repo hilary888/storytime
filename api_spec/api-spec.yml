@@ -1,0 +1,42 @@
+openapi: 3.0.1
+info:
+  title: Storytime
+  description: "This is the openAPI spec for the the [Storytime](https://storytime.com) backend."
+  contact:
+    email: info@storytime.com
+  version: 1.0.0
+servers:
+  - url: http://storytime.com/api/v1
+  - url: https://storytime.com/api/v1
+
+tags:
+  - name: auth
+    description: Authentication and account recovery endpoints
+
+paths:
+  /signup:
+    post:
+      tags:
+        - auth
+      summary: Register a new account
+      description: Register a new account
+      requestBody:
+        description: Create new storytime user account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/NewUser"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UserDetails"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ValidationError"

@@ -32,7 +32,10 @@
       "@adonisjs/lucid",
       "@adonisjs/auth",
       "@adonisjs/lucid-slugify",
-      "@adonisjs/attachment-lite"
+      "@adonisjs/attachment-lite",
+      "@adonisjs/redis",
+      "@adonisjs/mail",
+      "@adonisjs/view"
     ]
   }
 }

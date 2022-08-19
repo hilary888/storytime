@@ -19,7 +19,7 @@ export default class EmailVerificationToken extends BaseModel {
   public isVerified: boolean
 
   @column.dateTime()
-  public verifiedAt: DateTime
+  public verifiedAt?: DateTime
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

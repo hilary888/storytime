@@ -18,13 +18,16 @@ export default class User extends BaseModel {
   public avatar: AttachmentContract
 
   @column()
+  public username: string
+
+  @column()
   public email: string
 
   @column({ serializeAs: null })
   public password: string
 
   @column()
-  public lastLoginAt: DateTime
+  public lastLoginAt?: DateTime
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
