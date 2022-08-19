@@ -11,3 +11,4 @@ import Mail from "@ioc:Adonis/Addons/Mail"
 import Event from "@ioc:Adonis/Core/Event"
 
 Event.on('mail:sent', Mail.prettyPrint)
+Event.on("user:login", "User.onUserLogin")

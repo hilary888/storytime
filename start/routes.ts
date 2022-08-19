@@ -26,4 +26,11 @@ Route.group(() => {
   Route.get("/verify/:token", "AuthController.verifyEmail").as("verifyEmail")
   Route.get("/forgot_password/:email", "AuthController.getPasswordResetToken")
   Route.post("/reset_password/:token", "AuthController.resetPassword").as("resetPassword")
+  Route.post("/login", "AuthController.login")
+
+  // Auth routes
+  Route.group(() => {
+    Route.get("/logout", "AuthController.logout")
+  }).middleware("auth")
+
 }).prefix("/api/v1")
