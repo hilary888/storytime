@@ -8,6 +8,28 @@ components:
           items:
             $ref: "#/components/schemas/ValidationErrorDetail"
 
+    BadRequestError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorMessageDetail"
+
+    NotFoundError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorMessageDetail"
+
+    ErrorMessageDetail:
+      type: object
+      properties:
+        message:
+          type: string
+
     ValidationErrorDetail:
       type: object
       properties:

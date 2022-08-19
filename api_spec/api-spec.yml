@@ -40,3 +40,30 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/ValidationError"
+
+  /verify/{token}:
+    get:
+      tags:
+        - auth
+      summary: Verify email address
+      description: Email verification endpoint
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: signature
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Email address verified
+        "400":
+          description: Invalid url signature
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/BadRequestError"

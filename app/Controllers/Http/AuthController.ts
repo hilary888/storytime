@@ -34,7 +34,7 @@ export default class AuthController {
         if (!request.hasValidSignature()) {
             return response.badRequest({
                 errors: [
-                    { message: "URL signature is missing or URL was tampered with" }
+                    { message: "URL signature/ Token is missing, or URL was tampered with" }
                 ]
             })
         }
