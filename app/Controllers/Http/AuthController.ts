@@ -21,6 +21,14 @@ export default class AuthController {
         return response.created(user.serialize())
     }
 
+    public async resendEmailVerification({ request, response }: HttpContextContract) {
+        const { email } = request.params()
+        const user = await User.findByOrFail("email", email)
+        await AuthService.sendVerificationEmail(user)
+
+        return response.noContent()
+    }
+
     public async verifyEmail({ request, response }: HttpContextContract) {
         // Check if url signature is valid
         if (!request.hasValidSignature()) {

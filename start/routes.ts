@@ -27,6 +27,7 @@ Route.group(() => {
   Route.get("/forgot_password/:email", "AuthController.getPasswordResetToken")
   Route.post("/reset_password/:token", "AuthController.resetPassword").as("resetPassword")
   Route.post("/login", "AuthController.login")
+  Route.get("/resend_verification/:email", "AuthController.resendEmailVerification")
 
   // Auth routes
   Route.group(() => {
