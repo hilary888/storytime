@@ -262,4 +262,68 @@ test.group('Auth', (group) => {
     response.assertStatus(404)
     response.assertAgainstApiSpec()
   })
+
+  test("login works with valid credentials", async ({ client }) => {
+    const user = await UserFactory
+      .merge({ password: "somePassword!" })
+      .create()
+    const signInPayload = {
+      email: user.email,
+      password: "somePassword!"
+    }
+
+    const response = await client
+      .post("/api/v1/login")
+      .json(signInPayload)
+
+    response.assertStatus(200)
+    response.assertAgainstApiSpec()
+  })
+
+  test("login fails with invalid credentials", async ({ client }, payload) => {
+    await UserFactory
+      .merge({
+        email: "myUsername@mail.com",
+        password: "!someRandomPassword!"
+      })
+      .create()
+
+    const response = await client
+      .post("/api/v1/login")
+      .json(payload)
+
+    response.assertStatus(400)
+    response.assertAgainstApiSpec()
+  }).with([
+    {
+      email: "myUsername@mail.com",
+      password: "fakePassword"
+    },
+    {
+      email: "fakeUsername@mail.com",
+      password: "!someRandomPassword!"
+    }
+  ])
+
+  test("logout works for logged in users", async ({ client }) => {
+    const user = await UserFactory.create()
+
+    const response = await client
+      .get("/api/v1/logout")
+      .loginAs(user)
+
+    response.assertStatus(204)
+  })
+
+  test("logout fails for guests", async ({ client }) => {
+    const response = await client
+      .get("/api/v1/logout")
+
+    response.assertStatus(401)
+    response.assertAgainstApiSpec()
+  })
+
+
+
+
 })

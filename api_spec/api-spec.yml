@@ -157,3 +157,52 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /login:
+    post:
+      tags:
+        - auth
+      summary: Login
+      description: Login
+      requestBody:
+        description: login payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/LoginDetails"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/LoginTokenDetails"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ValidationError"
+        "400":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/BadRequestError"
+
+  /logout:
+    get:
+      tags:
+        - auth
+      summary: Logout
+      description: Logout
+      responses:
+        "204":
+          description: Logout successful
+        "401":
+          description: Unauthorised logout
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"

@@ -27,7 +27,7 @@ export const EmailVerificationTokenFactory = Factory
     .build()
 
 export const PasswordResetTokenFactory = Factory
-    .define(PasswordResetToken, ({ faker }) => {
+    .define(PasswordResetToken, () => {
         return {
             token: uuidv4(),
             expiresAt: DateTime.now().plus({ minutes: 10 })

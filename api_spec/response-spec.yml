@@ -58,3 +58,21 @@ components:
           type: string
         updated_at:
           type: string
+
+    LoginTokenDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        token:
+          type: string
+        expires_at:
+          type: string
+
+    UnauthorizedAccessError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorMessageDetail"
