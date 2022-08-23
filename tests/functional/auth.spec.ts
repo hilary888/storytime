@@ -124,7 +124,6 @@ test.group('Auth', (group) => {
     const route = Route.makeUrl("verifyEmail", {
       token: verificationToken.token
     })
-    console.log("route: ", route)
 
     const response = await client.get(route)
 
@@ -149,5 +148,31 @@ test.group('Auth', (group) => {
   })
 
 
+  test("guest can request verification email be resent to valid email", async ({ assert, client }) => {
+    const mailer = Mail.fake()
+    const email = "user.mail@mail.com"
+    const user = await UserFactory.merge({ email })
+      .with("emailVerificationTokens", 1, (verificationToken) => verificationToken.merge({ email }))
+      .create()
 
+    const response = await client
+      .get(`/api/v1/resend_verification/${encodeURIComponent(user.email)}`)
+
+    response.assertStatus(204)
+    // assert onboarding mail is been sent
+    assert.isTrue(
+      mailer.exists((mail) => {
+        return mail.subject === "Welcome Onboard!";
+      })
+    )
+  })
+
+  test("guest cannot verify nonexistent email address", async ({ client }) => {
+    const email = "test.user@mail.com"
+    const response = await client
+      .get(`/api/v1/resend_verification/${encodeURIComponent(email)}`)
+
+    response.assertStatus(404)
+    response.assertAgainstApiSpec()
+  })
 })

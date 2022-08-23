@@ -67,3 +67,25 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/BadRequestError"
+
+  /resend_verification/:email:
+    get:
+      tags:
+        - auth
+      summary: Resend verification email to user
+      description: Resendd verification email to user
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Verification email resent
+        "404":
+          description: Provided email not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"

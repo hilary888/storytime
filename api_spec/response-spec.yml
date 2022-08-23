@@ -19,10 +19,12 @@ components:
     NotFoundError:
       type: object
       properties:
-        errors:
-          type: array
-          items:
-            $ref: "#/components/schemas/ErrorMessageDetail"
+        message:
+          type: string
+        stack:
+          type: string
+        code:
+          type: string
 
     ErrorMessageDetail:
       type: object

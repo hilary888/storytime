@@ -23,7 +23,8 @@ export default class AuthController {
 
     public async resendEmailVerification({ request, response }: HttpContextContract) {
         const { email } = request.params()
-        const user = await User.findByOrFail("email", email)
+        const decodedEmail = decodeURIComponent(email)
+        const user = await User.findByOrFail("email", decodedEmail)
         await AuthService.sendVerificationEmail(user)
 
         return response.noContent()
