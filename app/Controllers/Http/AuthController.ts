@@ -58,7 +58,8 @@ export default class AuthController {
 
     public async getPasswordResetToken({ request, response }: HttpContextContract) {
         const { email } = request.params()
-        const user = await User.findByOrFail("email", email)
+        const decodedEmail = decodeURIComponent(email)
+        const user = await User.findByOrFail("email", decodedEmail)
 
         // Make entry into password reset table
         const resetToken = await Database.transaction(async (trx) => {

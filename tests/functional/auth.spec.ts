@@ -175,4 +175,29 @@ test.group('Auth', (group) => {
     response.assertStatus(404)
     response.assertAgainstApiSpec()
   })
+
+  test("forgot password request works for valid emails", async ({ assert, client }) => {
+    const mailer = Mail.fake()
+    const user = await UserFactory.create()
+
+    const response = await client
+      .get(`/api/v1/forgot_password/${encodeURIComponent(user.email)}`)
+
+    response.assertStatus(204)
+    assert.isTrue(
+      mailer.exists((mail) => {
+        return mail.subject === "Storytime - Reset Password"
+      })
+    )
+  })
+
+  test("forgot password request fails for nonexistent emails", async ({ client }) => {
+    const email = "test.user@mail.com"
+
+    const response = await client
+      .get(`/api/v1/forgot_password/${encodeURIComponent(email)}`)
+
+    response.assertStatus(404)
+    response.assertAgainstApiSpec()
+  })
 })
