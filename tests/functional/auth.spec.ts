@@ -3,6 +3,7 @@ import Database from '@ioc:Adonis/Lucid/Database';
 import { test } from '@japa/runner'
 import { UserFactory } from 'Database/factories';
 import Route from "@ioc:Adonis/Core/Route"
+import { v4 as uuidv4 } from "uuid"
 
 test.group('Auth', (group) => {
   group.each.setup(async () => {
@@ -115,22 +116,6 @@ test.group('Auth', (group) => {
     response.assertStatus(204)
   })
 
-  test("guest cannot verify email without url signature", async ({ client }) => {
-    const user = await UserFactory
-      .with("emailVerificationTokens", 1)
-      .create()
-    await user.load("emailVerificationTokens")
-    const verificationToken = await user.emailVerificationTokens[0]
-    const route = Route.makeUrl("verifyEmail", {
-      token: verificationToken.token
-    })
-
-    const response = await client.get(route)
-
-    response.assertStatus(400)
-    response.assertAgainstApiSpec()
-  })
-
   test("guest cannot verify email with doctored url", async ({ client }) => {
     const user = await UserFactory
       .with("emailVerificationTokens", 1)
@@ -144,6 +129,20 @@ test.group('Auth', (group) => {
     const response = await client.get(route + "3erd")
 
     response.assertStatus(400)
+    response.assertAgainstApiSpec()
+  })
+
+  test("guest cannot verify email with nonexistent token", async ({ client }) => {
+    await UserFactory
+      .with("emailVerificationTokens", 1)
+      .create()
+    const signedRoute = Route.makeSignedUrl("verifyEmail", {
+      token: uuidv4()
+    })
+
+    const response = await client.get(signedRoute)
+
+    response.assertStatus(404)
     response.assertAgainstApiSpec()
   })
 
@@ -196,6 +195,69 @@ test.group('Auth', (group) => {
 
     const response = await client
       .get(`/api/v1/forgot_password/${encodeURIComponent(email)}`)
+
+    response.assertStatus(404)
+    response.assertAgainstApiSpec()
+  })
+
+  test("reset password works with valid url", async ({ client }) => {
+    const user = await UserFactory
+      .with("passwordResetTokens", 1)
+      .create()
+    await user.load("passwordResetTokens")
+    const resetToken = await user.passwordResetTokens[0]
+    const signedRoute = Route.makeSignedUrl("resetPassword", {
+      token: resetToken.token
+    })
+    const payload = {
+      password: "anotheranother",
+      passwordConfirmation: "anotheranother"
+    }
+
+    const response = await client
+      .post(signedRoute)
+      .json(payload)
+
+    response.assertStatus(204)
+  })
+
+  test("reset password fails with doctored url", async ({ client }) => {
+    const user = await UserFactory
+      .with("passwordResetTokens", 1)
+      .create()
+    const resetToken = await user.related("passwordResetTokens").query().firstOrFail()
+    const signedRoute = Route.makeSignedUrl("resetPassword", {
+      token: resetToken.token
+    })
+    const payload = {
+      password: "anotheranother",
+      passwordConfirmation: "anotheranother"
+    }
+
+    const response = await client
+      .post(signedRoute + "eea")
+      .json(payload)
+
+    response.assertStatus(400)
+    response.assertAgainstApiSpec()
+  })
+
+  test("reset password fails with nonexistent url", async ({ client }) => {
+    await UserFactory
+      .with("passwordResetTokens", 1)
+      .create()
+
+    const signedRoute = Route.makeSignedUrl("resetPassword", {
+      token: uuidv4()
+    })
+    const payload = {
+      password: "anotheranother",
+      passwordConfirmation: "anotheranother"
+    }
+
+    const response = await client
+      .post(signedRoute)
+      .json(payload)
 
     response.assertStatus(404)
     response.assertAgainstApiSpec()

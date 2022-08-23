@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.integer("user_id").notNullable().references("users.id").onDelete("CASCADE")
 
       table.uuid("token").notNullable().index()
-      table.timestamp("expires_at", { useTz: true })
+      table.timestamp("expires_at", { useTz: true }).notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

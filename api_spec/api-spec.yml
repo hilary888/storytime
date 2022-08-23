@@ -67,6 +67,12 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/BadRequestError"
+        "404":
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
 
   /resend_verification/:email:
     get:
@@ -107,6 +113,46 @@ paths:
           description: Reset url sent to user's email
         "404":
           description: Provided email not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /reset_password/{token}:
+    post:
+      tags:
+        - auth
+      summary: Reset password
+      description: Reset password
+      requestBody:
+        description: Password reset payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/PasswordReset"
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: signature
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Password reset successfully
+        "400":
+          description: Invalid reset url
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/BadRequestError"
+        "404":
+          description: Token not found
           content:
             application/json:
               schema:

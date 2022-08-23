@@ -64,7 +64,8 @@ export default class AuthController {
         // Make entry into password reset table
         const resetToken = await Database.transaction(async (trx) => {
             const savePayload = {
-                token: uuidv4()
+                token: uuidv4(),
+                expiresAt: DateTime.now().plus({ minutes: 10 })
             }
             const token = await user.related("passwordResetTokens")
                 .updateOrCreate({}, savePayload, { client: trx })

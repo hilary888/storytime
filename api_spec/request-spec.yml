@@ -11,3 +11,11 @@ components:
           type: string
         passwordConfirmation:
           type: string
+
+    PasswordReset:
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
