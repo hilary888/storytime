@@ -24,6 +24,11 @@ export const EmailVerificationTokenFactory = Factory
             token: uuidv4()
         }
     })
+    .state("verified", (token) => {
+        token.isVerified = true
+        token.verifiedAt = DateTime.now()
+        return token
+    })
     .build()
 
 export const PasswordResetTokenFactory = Factory
