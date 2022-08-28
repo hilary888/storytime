@@ -7,8 +7,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer("user_id").notNullable().references("users.id").onDelete("CASCADE")
-      table.string("email").notNullable()
-      table.uuid("token").notNullable()
+      table.string("email").notNullable().index()
+      table.uuid("token").notNullable().index()
       table.boolean("is_verified").notNullable().defaultTo(false)
       table.timestamp("verified_at", { useTz: true })
 

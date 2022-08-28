@@ -30,8 +30,8 @@ export default class ResetPassword extends BaseMailer {
     const url = `${Env.get("FE_URL")}${signedRoute}`
 
     message
-      .subject('Storytime - Reset Password')
-      .from('noreply@storytime.com')
+      .subject("Storytime - Reset Password")
+      .from("noreply@storytime.com")
       .to(this.user.email)
       .htmlView("emails/reset_password", {
         url,

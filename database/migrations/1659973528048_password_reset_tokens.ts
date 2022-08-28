@@ -8,8 +8,8 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer("user_id").notNullable().references("users.id").onDelete("CASCADE")
 
-      table.uuid("token").notNullable()
-      table.timestamp("expires_at", { useTz: true })
+      table.uuid("token").notNullable().index()
+      table.timestamp("expires_at", { useTz: true }).notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

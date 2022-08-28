@@ -23,7 +23,8 @@ export default class AuthController {
 
     public async resendEmailVerification({ request, response }: HttpContextContract) {
         const { email } = request.params()
-        const user = await User.findByOrFail("email", email)
+        const decodedEmail = decodeURIComponent(email)
+        const user = await User.findByOrFail("email", decodedEmail)
         await AuthService.sendVerificationEmail(user)
 
         return response.noContent()
@@ -34,7 +35,7 @@ export default class AuthController {
         if (!request.hasValidSignature()) {
             return response.badRequest({
                 errors: [
-                    { message: "URL signature is missing or URL was tampered with" }
+                    { message: "URL signature/ Token is missing, or URL was tampered with" }
                 ]
             })
         }
@@ -57,12 +58,14 @@ export default class AuthController {
 
     public async getPasswordResetToken({ request, response }: HttpContextContract) {
         const { email } = request.params()
-        const user = await User.findByOrFail("email", email)
+        const decodedEmail = decodeURIComponent(email)
+        const user = await User.findByOrFail("email", decodedEmail)
 
         // Make entry into password reset table
         const resetToken = await Database.transaction(async (trx) => {
             const savePayload = {
-                token: uuidv4()
+                token: uuidv4(),
+                expiresAt: DateTime.now().plus({ minutes: 10 })
             }
             const token = await user.related("passwordResetTokens")
                 .updateOrCreate({}, savePayload, { client: trx })

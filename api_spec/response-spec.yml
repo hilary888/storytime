@@ -8,6 +8,30 @@ components:
           items:
             $ref: "#/components/schemas/ValidationErrorDetail"
 
+    BadRequestError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorMessageDetail"
+
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+        stack:
+          type: string
+        code:
+          type: string
+
+    ErrorMessageDetail:
+      type: object
+      properties:
+        message:
+          type: string
+
     ValidationErrorDetail:
       type: object
       properties:
@@ -34,3 +58,122 @@ components:
           type: string
         updated_at:
           type: string
+
+    LoginTokenDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        token:
+          type: string
+        expires_at:
+          type: string
+
+    UnauthorizedAccessError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorMessageDetail"
+
+    HealthyAppDetails:
+      type: object
+      properties:
+        healthy:
+          type: boolean
+        report:
+          type: object
+          properties:
+            env:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                health:
+                  type: object
+                  properties:
+                    healthy:
+                      type: boolean
+            appKey:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                health:
+                  type: object
+                  properties:
+                    healthy:
+                      type: boolean
+            redis:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                health:
+                  type: object
+                  properties:
+                    healthy:
+                      type: boolean
+                    message:
+                      type: string
+                meta:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      connection:
+                        type: string
+                      status:
+                        type: string
+                      used_memory:
+                        type: string
+                      error:
+                        nullable: true
+                        type: object
+                        properties:
+                          errno:
+                            type: number
+                          code:
+                            type: string
+                          syscall:
+                            type: string
+                          address:
+                            type: string
+                          port:
+                            type: number
+            lucid:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                health:
+                  type: object
+                  properties:
+                    healthy:
+                      type: boolean
+                    message:
+                      type: string
+                meta:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      connection:
+                        type: string
+                      message:
+                        type: string
+                      error:
+                        nullable: true
+                        type: object
+                        properties:
+                          errno:
+                            type: number
+                          code:
+                            type: string
+                          syscall:
+                            type: string
+                          address:
+                            type: string
+                          port:
+                            type: number

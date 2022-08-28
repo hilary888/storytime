@@ -12,6 +12,8 @@ servers:
 tags:
   - name: auth
     description: Authentication and account recovery endpoints
+  - name: health
+    description: Application health check
 
 paths:
   /signup:
@@ -40,3 +42,189 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/ValidationError"
+
+  /verify/{token}:
+    get:
+      tags:
+        - auth
+      summary: Verify email address
+      description: Email verification endpoint
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: signature
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Email address verified
+        "400":
+          description: Invalid url signature
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/BadRequestError"
+        "404":
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /resend_verification/:email:
+    get:
+      tags:
+        - auth
+      summary: Resend verification email to user
+      description: Resendd verification email to user
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Verification email resent
+        "404":
+          description: Provided email not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /forgot_password/:email:
+    get:
+      tags:
+        - auth
+      summary: Get password reset token
+      description: Get password reset url delivered to mail
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Reset url sent to user's email
+        "404":
+          description: Provided email not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /reset_password/{token}:
+    post:
+      tags:
+        - auth
+      summary: Reset password
+      description: Reset password
+      requestBody:
+        description: Password reset payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/PasswordReset"
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: signature
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Password reset successfully
+        "400":
+          description: Invalid reset url
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/BadRequestError"
+        "404":
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /login:
+    post:
+      tags:
+        - auth
+      summary: Login
+      description: Login
+      requestBody:
+        description: login payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/LoginDetails"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/LoginTokenDetails"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ValidationError"
+        "400":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/BadRequestError"
+
+  /logout:
+    get:
+      tags:
+        - auth
+      summary: Logout
+      description: Logout
+      responses:
+        "204":
+          description: Logout successful
+        "401":
+          description: Unauthorised logout
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+
+  /health_check:
+    get:
+      tags:
+        - auth
+      summary: Health check
+      description: Health check
+      responses:
+        "200":
+          description: Application healthy
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/HealthyAppDetails"
+        "400":
+          description: Application healthy
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/HealthyAppDetails"
