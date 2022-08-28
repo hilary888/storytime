@@ -12,6 +12,8 @@ servers:
 tags:
   - name: auth
     description: Authentication and account recovery endpoints
+  - name: health
+    description: Application health check
 
 paths:
   /signup:
@@ -206,3 +208,23 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+
+  /health_check:
+    get:
+      tags:
+        - auth
+      summary: Health check
+      description: Health check
+      responses:
+        "200":
+          description: Application healthy
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/HealthyAppDetails"
+        "400":
+          description: Application healthy
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/HealthyAppDetails"
