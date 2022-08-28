@@ -16,7 +16,11 @@ export default class Novel extends BaseModel {
   @column()
   public title: string
 
-  @column()
+  @column(
+    {
+      prepare: (value) => JSON.stringify(value)
+    }
+  )
   public content: object
 
   @column()
@@ -33,9 +37,9 @@ export default class Novel extends BaseModel {
   public publishedAt?: DateTime
 
   @column(
-    // {
-    //   prepare: (value) => JSON.stringify(value)
-    // }
+    {
+      prepare: (value) => JSON.stringify(value)
+    }
   )
   public tags: object
 

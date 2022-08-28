@@ -32,6 +32,12 @@ Route.group(() => {
   // Auth routes
   Route.group(() => {
     Route.get("/logout", "AuthController.logout")
+
+    // User routes
+    Route.group(() => {
+      Route.post("/novels", "UserNovelsController.create")
+    }).prefix("/user")
+
   }).middleware("auth")
 
 }).prefix("/api/v1")
