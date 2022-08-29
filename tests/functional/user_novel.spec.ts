@@ -8,7 +8,7 @@ test.group('User novels', (group) => {
     return () => Database.rollbackGlobalTransaction()
   })
 
-  test("user can upload novel", async ({ client }) => {
+  test(" verified user can upload novel", async ({ client }) => {
     const payload = {
       title: "someRandomTitle",
       content: [
@@ -34,6 +34,30 @@ test.group('User novels', (group) => {
       .loginAs(user)
 
     response.assertStatus(201)
+    response.assertAgainstApiSpec()
+  })
+
+  test("guest cannot upload novel", async ({ client }) => {
+    const payload = {
+      title: "someRandomTitle",
+      content: [
+        {
+          title: "A new day",
+          content: "Once there was an innocent man..."
+        },
+        {
+          title: "At dawn's end",
+          content: "... but alas, everything comes to an end."
+        }
+      ],
+      tags: ["self-discovery", "adventure"]
+    }
+
+    const response = await client
+      .post("/api/v1/user/novels")
+      .json(payload)
+
+    response.assertStatus(401)
     response.assertAgainstApiSpec()
   })
 

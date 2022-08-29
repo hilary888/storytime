@@ -76,7 +76,7 @@ paths:
               schema:
                 $ref: "response-spec.yml#/components/schemas/NotFoundError"
 
-  /resend_verification/:email:
+  /resend_verification/{email}:
     get:
       tags:
         - auth
@@ -98,7 +98,7 @@ paths:
               schema:
                 $ref: "response-spec.yml#/components/schemas/NotFoundError"
 
-  /forgot_password/:email:
+  /forgot_password/{email}:
     get:
       tags:
         - auth
@@ -228,3 +228,30 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/HealthyAppDetails"
+
+  /user/novels:
+    post:
+      tags:
+        - auth
+      summary: Create new novel
+      description: Endpoint for user to create new novel
+      requestBody:
+        description: New novel payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/NewNovel"
+      responses:
+        "201":
+          description: Novel created
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NovelDetails"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
