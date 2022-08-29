@@ -255,3 +255,9 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+        "403":
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ForbiddenError"

@@ -37,6 +37,35 @@ test.group('User novels', (group) => {
     response.assertAgainstApiSpec()
   })
 
+  test("verified user can upload novel", async ({ client }) => {
+    const payload = {
+      title: "someRandomTitle",
+      content: [
+        {
+          title: "A new day",
+          content: "Once there was an innocent man..."
+        },
+        {
+          title: "At dawn's end",
+          content: "... but alas, everything comes to an end."
+        }
+      ],
+      tags: ["self-discovery", "romance"]
+    }
+
+    const user = await UserFactory
+      .with("emailVerificationTokens", 1)
+      .create()
+
+    const response = await client
+      .post("/api/v1/user/novels")
+      .json(payload)
+      .loginAs(user)
+
+    response.assertStatus(403)
+    response.assertAgainstApiSpec()
+  })
+
   test("guest cannot upload novel", async ({ client }) => {
     const payload = {
       title: "someRandomTitle",
