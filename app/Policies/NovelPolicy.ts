@@ -11,6 +11,7 @@ export default class PostNovelPolicy extends BasePolicy {
 	public async update(user: User, novel: Novel) {
 		const verificationToken = await user.related("emailVerificationTokens").query().firstOrFail()
 		const isOwner = user.id === novel.userId
-		return isOwner && verificationToken
+
+		return isOwner && verificationToken.isVerified
 	}
 }

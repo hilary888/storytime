@@ -28,7 +28,7 @@ components:
         password:
           type: string
 
-    NewNovel:
+    NewOrUpdatedNovel:
       type: object
       properties:
         title:
@@ -47,3 +47,6 @@ components:
           type: array
           items:
             type: string
+        isPublished:
+          nullable: true
+          type: boolean

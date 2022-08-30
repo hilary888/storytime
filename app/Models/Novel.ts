@@ -59,6 +59,15 @@ export default class Novel extends BaseModel {
     }
   }
 
+  @beforeSave()
+  public static async savePublishDetails(novel: Novel) {
+    if (novel.$dirty.isPublished && novel.$dirty.isPublished === true) {
+      novel.publishedAt = DateTime.now()
+    } else {
+      novel.publishedAt = undefined
+    }
+  }
+
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 

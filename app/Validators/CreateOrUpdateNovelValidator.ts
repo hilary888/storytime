@@ -39,7 +39,8 @@ export default class CreateOrUpdateNovelValidator {
       schema.string({ trim: true }, [
         rules.minLength(1)
       ])
-    )
+    ),
+    isPublished: schema.boolean.optional()
   })
 
   /**

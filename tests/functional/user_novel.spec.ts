@@ -90,4 +90,36 @@ test.group('User novels', (group) => {
     response.assertAgainstApiSpec()
   })
 
+  test("verified user can update their novel", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("novels", 1)
+      .create()
+
+    const novel = await user.related("novels").query().firstOrFail()
+
+    const payload = {
+      title: "someRandomTitle",
+      content: [
+        {
+          title: "A new day",
+          content: "Once there was an innocent man..."
+        },
+        {
+          title: "At dawn's end",
+          content: "... but alas, everything comes to an end."
+        }
+      ],
+      tags: ["self-discovery", "adventure"]
+    }
+
+    const response = await client
+      .put(`/api/v1/user/novels/${novel.id}`)
+      .json(payload)
+      .loginAs(user)
+
+    response.assertStatus(200)
+    response.assertAgainstApiSpec()
+  })
+
 })

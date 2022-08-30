@@ -35,7 +35,9 @@ Route.group(() => {
 
     // User routes
     Route.group(() => {
+      // Novel routes
       Route.post("/novels", "UserNovelsController.create")
+      Route.put("/novels/:id", "UserNovelsController.update")
     }).prefix("/user")
 
   }).middleware("auth")

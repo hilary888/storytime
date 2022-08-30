@@ -8,7 +8,7 @@ export default class UserNovelsController {
         const user = auth.user!
         // authorize
         await bouncer.with("NovelPolicy").authorize("create")
-        // get story
+        // get payload
         const validationPayload = await request.validate(CreateOrUpdateNovelValidator)
         // update payload with additional data
         const savePayload = {
@@ -25,6 +25,7 @@ export default class UserNovelsController {
     }
 
     public async update({ bouncer, request, response }: HttpContextContract) {
+        // Get novel and authorize
         const { id } = request.params()
         const novel = await Novel.findOrFail(id)
         await bouncer.with("NovelPolicy").authorize("update", novel)
