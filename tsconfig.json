@@ -35,7 +35,8 @@
       "@adonisjs/attachment-lite",
       "@adonisjs/redis",
       "@adonisjs/mail",
-      "@adonisjs/view"
+      "@adonisjs/view",
+      "@adonisjs/bouncer"
     ]
   }
 }

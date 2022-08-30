@@ -12,8 +12,9 @@ export default class extends BaseSchema {
       table.jsonb("content").notNullable()
       table.string("slug").notNullable()
       table.boolean("is_published").notNullable().defaultTo(false)
-      table.timestamp("published_at").nullable()
+      table.timestamp("published_at", { useTz: true }).nullable()
       table.jsonb("tags")
+      table.string("hash")
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

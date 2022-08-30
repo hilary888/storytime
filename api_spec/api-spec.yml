@@ -14,6 +14,8 @@ tags:
     description: Authentication and account recovery endpoints
   - name: health
     description: Application health check
+  - name: user novels
+    description: User novel endpoints
 
 paths:
   /signup:
@@ -76,7 +78,7 @@ paths:
               schema:
                 $ref: "response-spec.yml#/components/schemas/NotFoundError"
 
-  /resend_verification/:email:
+  /resend_verification/{email}:
     get:
       tags:
         - auth
@@ -98,7 +100,7 @@ paths:
               schema:
                 $ref: "response-spec.yml#/components/schemas/NotFoundError"
 
-  /forgot_password/:email:
+  /forgot_password/{email}:
     get:
       tags:
         - auth
@@ -228,3 +230,75 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/HealthyAppDetails"
+
+  /user/novels:
+    post:
+      tags:
+        - user novels
+      summary: Create new novel
+      description: Endpoint for user to create new novel
+      requestBody:
+        description: New novel payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/NewOrUpdatedNovel"
+      responses:
+        "201":
+          description: Novel created
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NovelDetails"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+        "403":
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ForbiddenError"
+
+  /user/novels/{id}:
+    put:
+      tags:
+        - user novels
+      summary: Update novel
+      description: Update novel
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      requestBody:
+        description: Updated novel
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "request-spec.yml#/components/schemas/NewOrUpdatedNovel"
+      responses:
+        "200":
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NovelDetails"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+        "403":
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ForbiddenError"

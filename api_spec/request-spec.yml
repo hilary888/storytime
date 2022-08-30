@@ -27,3 +27,26 @@ components:
           type: string
         password:
           type: string
+
+    NewOrUpdatedNovel:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+        tags:
+          nullable: true
+          type: array
+          items:
+            type: string
+        isPublished:
+          nullable: true
+          type: boolean

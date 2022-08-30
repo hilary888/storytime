@@ -77,6 +77,46 @@ components:
           items:
             $ref: "#/components/schemas/ErrorMessageDetail"
 
+    ForbiddenError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorMessageDetail"
+
+    NovelDetails:
+      type: object
+      properties:
+        id:
+          type: number
+        user_id:
+          type: number
+        title:
+          type: string
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+        tags:
+          nullable: true
+          type: array
+          items:
+            type: string
+        slug:
+          type: string
+        hash:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+
     HealthyAppDetails:
       type: object
       properties:
