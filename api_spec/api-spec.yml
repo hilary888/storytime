@@ -402,3 +402,23 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /user:
+    get:
+      tags:
+        - user administration
+      summary: Get user details
+      description: Get user details
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UserDetails"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
