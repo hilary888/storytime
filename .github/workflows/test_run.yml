@@ -23,6 +23,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
       - run: cp .env.example .env
-      - run: node ace test
+      - name: Run tests
+        env:
+
+        run: node ace test
