@@ -14,4 +14,14 @@ export default class PostNovelPolicy extends BasePolicy {
 
 		return isOwner && verificationToken.isVerified
 	}
+
+	public async delete(user: User, novel: Novel) {
+		const verificationToken = await user
+			.related("emailVerificationTokens")
+			.query()
+			.firstOrFail()
+		const isOwner = user.id === novel.userId
+
+		return isOwner && verificationToken.isVerified
+	}
 }

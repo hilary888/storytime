@@ -185,4 +185,84 @@ test.group('User novels', (group) => {
     response.assertAgainstApiSpec()
   })
 
+  test("verified user can delete their novel", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("novels", 5)
+      .create()
+
+    const novel = await user.related("novels").query().firstOrFail()
+
+    const response = await client
+      .delete(`/api/v1/user/novels/${novel.id}`)
+      .loginAs(user)
+
+    response.assertStatus(204)
+  })
+
+  test("verified user cannot delete non-existent novel", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      // .with("novels", 5)
+      .create()
+
+    const response = await client
+      .delete(`/api/v1/user/novels/1`)
+      .loginAs(user)
+
+    response.assertStatus(404)
+    response.assertAgainstApiSpec()
+  })
+
+  test("verified non-owner cannot delete novel", async ({ client }) => {
+    const owner = await UserFactory
+      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("novels", 3)
+      .create()
+    const nonOwner = await UserFactory
+      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .create()
+
+    const novel = await owner.related("novels").query().firstOrFail()
+
+    const response = await client
+      .delete(`/api/v1/user/novels/${novel.id}`)
+      .loginAs(nonOwner)
+
+    response.assertStatus(403)
+    response.assertAgainstApiSpec()
+  })
+
+  test("unverified user cannot delete novel", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationTokens", 1)
+      .with("novels", 2)
+      .create()
+
+    const novel = await user.related("novels").query().firstOrFail()
+
+    const response = await client
+      .delete(`/api/v1/user/novels/${novel.id}`)
+      .loginAs(user)
+
+    response.assertStatus(403)
+    response.assertAgainstApiSpec()
+  })
+
+  test("guest cannot delete novel", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("novels", 1)
+      .create()
+
+    const novel = await user.related("novels").query().firstOrFail()
+
+    const response = await client
+      .delete(`/api/v1/user/novels/${novel.id}`)
+
+    response.assertStatus(401)
+    response.assertAgainstApiSpec()
+
+  })
+
 })

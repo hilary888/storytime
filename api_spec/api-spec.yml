@@ -302,3 +302,36 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/ForbiddenError"
+
+    delete:
+      tags:
+        - user novels
+      summary: Delete novel
+      description: User endpoint for deleting their novels
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Deletion successful
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+        "403":
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ForbiddenError"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"

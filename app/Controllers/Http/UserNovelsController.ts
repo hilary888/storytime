@@ -42,4 +42,20 @@ export default class UserNovelsController {
 
         return response.ok(updatedNovel.serialize())
     }
+
+    public async delete({ bouncer, request, response }: HttpContextContract) {
+        // Authorize and get novel
+        const { id } = request.params()
+        const novel = await Novel.findOrFail(id)
+        await bouncer.with("NovelPolicy").authorize("delete", novel)
+
+        await Database.transaction(async (trx) => {
+            await novel
+                .useTransaction(trx)
+                .delete()
+        })
+
+        return response.noContent()
+
+    }
 }

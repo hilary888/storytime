@@ -38,6 +38,7 @@ Route.group(() => {
       // Novel routes
       Route.post("/novels", "UserNovelsController.create")
       Route.put("/novels/:id", "UserNovelsController.update")
+      Route.delete("/novels/:id", "UserNovelsController.delete")
     }).prefix("/user")
 
   }).middleware("auth")
