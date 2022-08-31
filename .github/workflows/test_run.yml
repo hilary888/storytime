@@ -27,5 +27,7 @@ jobs:
         run: npm ci
       - run: cp .env.example .env
       - name: Run tests
-
+        env:
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
         run: node ace test
