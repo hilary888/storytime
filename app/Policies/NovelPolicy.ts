@@ -30,4 +30,10 @@ export default class PostNovelPolicy extends BasePolicy {
 
 		return isOwner && verificationToken.isVerified
 	}
+
+	public async show(user: User, novel: Novel) {
+		const isOwner = user.id === novel.userId
+		return isOwner
+	}
+
 }

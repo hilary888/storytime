@@ -58,10 +58,19 @@ export default class UserNovelsController {
         return response.noContent()
     }
 
-    public async show({ request, response }: HttpContextContract) {
+    public async show({ bouncer, request, response }: HttpContextContract) {
         const { id } = request.params()
         const novel = await Novel.findOrFail(id)
+        await bouncer.with("NovelPolicy").authorize("show", novel)
 
         return response.ok(novel.serialize())
+    }
+
+    public async index({ auth, request, response }: HttpContextContract) {
+        const { page, limit } = request.qs()
+        const user = auth.user!
+        const novels = await user.related("novels").query().paginate(page, limit)
+
+        return response.ok(novels.serialize())
     }
 }

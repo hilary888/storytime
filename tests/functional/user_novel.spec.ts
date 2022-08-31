@@ -279,6 +279,25 @@ test.group('User novels', (group) => {
     response.assertAgainstApiSpec()
   })
 
+  test("non-owner cannot get details of novels", async ({ client }) => {
+    const owner = await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .with("novels", 1)
+      .create()
+
+    const novel = await owner.related("novels").query().firstOrFail()
+    const nonOwner = await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .create()
+
+    const response = await client
+      .get(`/api/v1/user/novels/${novel.id}`)
+      .loginAs(nonOwner)
+
+    response.assertStatus(403)
+    response.assertAgainstApiSpec()
+  })
+
   test("unverified user can get details of their novels", async ({ client }) => {
     const user = await UserFactory
       .with("emailVerificationToken", 1)
@@ -309,5 +328,50 @@ test.group('User novels', (group) => {
     response.assertStatus(401)
     response.assertAgainstApiSpec()
   })
+
+  test("verified user can get all their novels", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .with("novels", 10)
+      .create()
+
+    const response = await client
+      .get(`/api/v1/user/novels`)
+      .loginAs(user)
+
+    response.assertStatus(200)
+    response.assertAgainstApiSpec()
+  })
+
+  test("user cannot get another user's novels", async ({ client }) => {
+    await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .with("novels", 10)
+      .create()
+
+    const otherUser = await UserFactory
+      .create()
+
+    const response = await client
+      .get(`/api/v1/user/novels`)
+      .loginAs(otherUser)
+
+    response.assertStatus(200)
+    response.assertAgainstApiSpec()
+  })
+
+  test("guest cannot get user's list of novels", async ({ client }) => {
+    await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .with("novels", 10)
+      .create()
+
+    const response = await client
+      .get(`/api/v1/user/novels`)
+
+    response.assertStatus(401)
+    response.assertAgainstApiSpec()
+  })
+
 
 })

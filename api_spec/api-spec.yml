@@ -264,6 +264,36 @@ paths:
               schema:
                 $ref: "response-spec.yml#/components/schemas/ForbiddenError"
 
+    get:
+      tags:
+        - user novels
+      summary: Get all of user's novels
+      description: Get all of user's novels
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Retrieval successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NovelDetailsList"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+
   /user/novels/{id}:
     put:
       tags:
