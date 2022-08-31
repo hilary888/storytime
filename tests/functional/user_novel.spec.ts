@@ -279,4 +279,35 @@ test.group('User novels', (group) => {
     response.assertAgainstApiSpec()
   })
 
+  test("unverified user can get details of their novels", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationToken", 1)
+      .with("novels", 1)
+      .create()
+
+    const novel = await user.related("novels").query().firstOrFail()
+
+    const response = await client
+      .get(`/api/v1/user/novels/${novel.id}`)
+      .loginAs(user)
+
+    response.assertStatus(200)
+    response.assertAgainstApiSpec()
+  })
+
+  test("guest cannot get details of a novel", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .with("novels", 1)
+      .create()
+
+    const novel = await user.related("novels").query().firstOrFail()
+
+    const response = await client
+      .get(`/api/v1/user/novels/${novel.id}`)
+
+    response.assertStatus(401)
+    response.assertAgainstApiSpec()
+  })
+
 })
