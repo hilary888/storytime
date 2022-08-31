@@ -25,9 +25,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm ci
-      - run: cp .env.example .env
+      - run: echo "${{ secrets.STORYTIME_SECRETS }}" > .env
       - name: Run tests
-        env:
-          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
-          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
         run: node ace test
