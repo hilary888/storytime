@@ -103,10 +103,10 @@ test.group('Auth', (group) => {
 
   test("guest can verify email with valid token and signature", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1)
+      .with("emailVerificationToken", 1)
       .create()
-    await user.load("emailVerificationTokens")
-    const verificationToken = await user.emailVerificationTokens[0]
+
+    const verificationToken = await user.related("emailVerificationToken").query().firstOrFail()
     const signedRoute = Route.makeSignedUrl("verifyEmail", {
       token: verificationToken.token
     })
@@ -118,10 +118,10 @@ test.group('Auth', (group) => {
 
   test("guest cannot verify email with doctored url", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1)
+      .with("emailVerificationToken", 1)
       .create()
-    await user.load("emailVerificationTokens")
-    const verificationToken = await user.emailVerificationTokens[0]
+
+    const verificationToken = await user.related("emailVerificationToken").query().firstOrFail()
     const route = Route.makeSignedUrl("verifyEmail", {
       token: verificationToken.token
     })
@@ -134,7 +134,7 @@ test.group('Auth', (group) => {
 
   test("guest cannot verify email with nonexistent token", async ({ client }) => {
     await UserFactory
-      .with("emailVerificationTokens", 1)
+      .with("emailVerificationToken", 1)
       .create()
     const signedRoute = Route.makeSignedUrl("verifyEmail", {
       token: uuidv4()
@@ -151,7 +151,7 @@ test.group('Auth', (group) => {
     const mailer = Mail.fake()
     const email = "user.mail@mail.com"
     const user = await UserFactory.merge({ email })
-      .with("emailVerificationTokens", 1, (verificationToken) => verificationToken.merge({ email }))
+      .with("emailVerificationToken", 1, (verificationToken) => verificationToken.merge({ email }))
       .create()
 
     const response = await client
@@ -242,7 +242,7 @@ test.group('Auth', (group) => {
     response.assertAgainstApiSpec()
   })
 
-  test("reset password fails with nonexistent url", async ({ client }) => {
+  test("reset password fails with nonexistent reset token", async ({ client }) => {
     await UserFactory
       .with("passwordResetTokens", 1)
       .create()

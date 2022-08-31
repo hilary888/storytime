@@ -21,7 +21,7 @@ export default class AuthService {
         }
 
         const verificationToken = await user
-            .related("emailVerificationTokens")
+            .related("emailVerificationToken")
             .updateOrCreate(searchPayload, savePayload, { client: trx })
 
         return verificationToken
@@ -29,7 +29,7 @@ export default class AuthService {
 
     public static async sendVerificationEmail(user: User) {
         const verificationToken = await user
-            .related("emailVerificationTokens")
+            .related("emailVerificationToken")
             .query()
             .where("email", user.email)
             .firstOrFail()

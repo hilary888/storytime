@@ -335,3 +335,40 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+    get:
+      tags:
+        - user novels
+      summary: Get novel details
+      description: Get novel details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Novel detail fetch successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NovelDetails"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+        "403":
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ForbiddenError"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"

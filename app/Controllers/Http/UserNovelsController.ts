@@ -56,6 +56,12 @@ export default class UserNovelsController {
         })
 
         return response.noContent()
+    }
 
+    public async show({ request, response }: HttpContextContract) {
+        const { id } = request.params()
+        const novel = await Novel.findOrFail(id)
+
+        return response.ok(novel.serialize())
     }
 }

@@ -25,7 +25,7 @@ test.group('User novels', (group) => {
     }
 
     const user = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .create()
 
     const response = await client
@@ -54,7 +54,7 @@ test.group('User novels', (group) => {
     }
 
     const user = await UserFactory
-      .with("emailVerificationTokens", 1)
+      .with("emailVerificationToken", 1)
       .create()
 
     const response = await client
@@ -92,7 +92,7 @@ test.group('User novels', (group) => {
 
   test("verified user can update their novel", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .with("novels", 1)
       .create()
 
@@ -124,7 +124,7 @@ test.group('User novels', (group) => {
 
   test("unverified user cannot update novel", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1)
+      .with("emailVerificationToken", 1)
       .with("novels", 1)
       .create()
 
@@ -156,7 +156,7 @@ test.group('User novels', (group) => {
 
   test("guest cannot update their novel", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .with("novels", 1)
       .create()
 
@@ -187,7 +187,7 @@ test.group('User novels', (group) => {
 
   test("verified user can delete their novel", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .with("novels", 5)
       .create()
 
@@ -202,8 +202,7 @@ test.group('User novels', (group) => {
 
   test("verified user cannot delete non-existent novel", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
-      // .with("novels", 5)
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .create()
 
     const response = await client
@@ -216,11 +215,11 @@ test.group('User novels', (group) => {
 
   test("verified non-owner cannot delete novel", async ({ client }) => {
     const owner = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .with("novels", 3)
       .create()
     const nonOwner = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .create()
 
     const novel = await owner.related("novels").query().firstOrFail()
@@ -235,7 +234,7 @@ test.group('User novels', (group) => {
 
   test("unverified user cannot delete novel", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1)
+      .with("emailVerificationToken", 1)
       .with("novels", 2)
       .create()
 
@@ -251,7 +250,7 @@ test.group('User novels', (group) => {
 
   test("guest cannot delete novel", async ({ client }) => {
     const user = await UserFactory
-      .with("emailVerificationTokens", 1, (token) => token.apply("verified"))
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
       .with("novels", 1)
       .create()
 
@@ -262,7 +261,22 @@ test.group('User novels', (group) => {
 
     response.assertStatus(401)
     response.assertAgainstApiSpec()
+  })
 
+  test("verified user can get details of their novels", async ({ client }) => {
+    const user = await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .with("novels", 1)
+      .create()
+
+    const novel = await user.related("novels").query().firstOrFail()
+
+    const response = await client
+      .get(`/api/v1/user/novels/${novel.id}`)
+      .loginAs(user)
+
+    response.assertStatus(200)
+    response.assertAgainstApiSpec()
   })
 
 })
