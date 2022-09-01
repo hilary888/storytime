@@ -59,3 +59,5 @@ jobs:
           cat .env
       - name: Run tests
         run: node ace test
+      - name: build application
+        run: node ace build --production
