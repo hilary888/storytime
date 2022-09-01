@@ -264,6 +264,36 @@ paths:
               schema:
                 $ref: "response-spec.yml#/components/schemas/ForbiddenError"
 
+    get:
+      tags:
+        - user novels
+      summary: Get all of user's novels
+      description: Get all of user's novels
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Retrieval successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NovelDetailsList"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+
   /user/novels/{id}:
     put:
       tags:
@@ -302,3 +332,93 @@ paths:
             application/json:
               schema:
                 $ref: "response-spec.yml#/components/schemas/ForbiddenError"
+
+    delete:
+      tags:
+        - user novels
+      summary: Delete novel
+      description: User endpoint for deleting their novels
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Deletion successful
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+        "403":
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ForbiddenError"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+    get:
+      tags:
+        - user novels
+      summary: Get novel details
+      description: Get novel details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Novel detail fetch successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NovelDetails"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"
+        "403":
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/ForbiddenError"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/NotFoundError"
+
+  /user:
+    get:
+      tags:
+        - user administration
+      summary: Get user details
+      description: Get user details
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UserDetails"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "response-spec.yml#/components/schemas/UnauthorizedAccessError"

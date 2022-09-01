@@ -117,6 +117,41 @@ components:
         updated_at:
           type: string
 
+    MetaDetails:
+      type: object
+      properties:
+        total:
+          type: number
+        per_page:
+          type: number
+        current_page:
+          nullable: true
+          type: number
+        last_page:
+          type: number
+        first_page:
+          type: number
+        first_page_url:
+          type: string
+        last_page_url:
+          type: string
+        next_page_url:
+          nullable: true
+          type: string
+        previous_page_url:
+          nullable: true
+          type: string
+
+    NovelDetailsList:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/MetaDetails"
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/NovelDetails"
+
     HealthyAppDetails:
       type: object
       properties:

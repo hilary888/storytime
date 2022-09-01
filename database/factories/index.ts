@@ -14,7 +14,7 @@ export const UserFactory = Factory
             password: faker.internet.password()
         }
     })
-    .relation("emailVerificationTokens", () => EmailVerificationTokenFactory)
+    .relation("emailVerificationToken", () => EmailVerificationTokenFactory)
     .relation("passwordResetTokens", () => PasswordResetTokenFactory)
     .relation("novels", () => NovelFactory)
     .build()
